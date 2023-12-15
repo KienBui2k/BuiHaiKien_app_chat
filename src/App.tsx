@@ -31,6 +31,44 @@ export default function App() {
     }
   }, [])
 
+
+  // sử lý token hết hạn
+
+  // async function checkAndRefreshToken() {
+  //   const authtoken = window.localStorage.getItem("nkauthtoken");
+  //   const refreshtoken = window.localStorage.getItem("nkrefreshtoken");
+
+  //   if (!authtoken || !refreshtoken) return;
+  //   let session: Session | undefined;
+  //   try {
+  //     session = Session?.restore(authtoken, refreshtoken);
+  //   } catch (e) {
+  //     console.error("Error restoring session:", e);
+  //     // Handle the error if Session.restore fails
+  //     return;
+  //   }
+
+  //   const unixTimeInFuture = Date.now() + 8.64e+7;
+
+  //   if (session && session.isexpired(unixTimeInFuture / 1000)) {
+  //     try {
+  //       session = await client?.sessionRefresh(session);
+  //       window.localStorage.setItem("nkauthtoken", session.token);
+  //       window.localStorage.setItem("nkrefreshtoken", session.refresh_token);
+  //     } catch (e) {
+  //       console.log("loi roi"), e;
+  //       window.localStorage.removeItem("nkauthtoken");
+  //       window.localStorage.removeItem("nkrefreshtoken");
+  //     }
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   checkAndRefreshToken();
+  // }, [client]);
+
+
+
   async function getAccount(session: Session) {
     const account = await client?.getAccount(session);
     setAccount(account)
@@ -50,9 +88,11 @@ export default function App() {
     const authtoken = window.localStorage.getItem("nkauthtoken") || "";
     const refreshtoken = window.localStorage.getItem("nkrefreshtoken") || "";
     let session = Session.restore(authtoken, refreshtoken);
+
     getAccount(session)
     getSocket(session)
     setLoginState(true)
+
   }, [client])
 
   async function getChannel(roomname: string, type: number, persistence: boolean, hidden: boolean) {
@@ -74,30 +114,40 @@ export default function App() {
     <>
       {loginState ?
         (
-          <div className="boxChat">
-            <h2>Hello: {account?.user?.username}</h2>
-            <h3>Room: {channelCode}
+          <div className="mainChat">
+            <div className="boxchat">
+              <div className="title">
+                <h2>App Chat</h2>
+              </div>
+              <div className="userName">
+                <h2>Hello: {account?.user?.username}</h2>
+              </div>
+              <div className="roomneam">
+                <h3>Room: {channelCode}
+                </h3>
+              </div>
+
               <button onClick={() => {
                 let newChannel = window.prompt("Nhập kênh chát mới") || "Chat all";
                 setChannelCode(newChannel)
-              }}>Save</button>
-            </h3>
+              }}>Đổi kênh</button>
+              <div className="inputChat">
+                <input id="message_input" type="text" placeholder="Message..." />
+                <button onClick={() => {
+                  const message = { "text": (document.querySelector("#message_input") as HTMLInputElement).value };
+                  if (channel) socket?.writeChatMessage(channel?.id, message);
+                  (document.querySelector("#message_input") as HTMLInputElement).value = "";
+                }}>Send</button>
+              </div>
+              <div className="listChat">
+                {chatList.map(chat => (
+                  <p>
+                    <b>{chat.username}</b>: <span>{chat.content.text}</span>
 
-            <div>
-              <input id="message_input" type="text" placeholder="Message..." />
-              <button onClick={() => {
-                const message = { "text": (document.querySelector("#message_input") as HTMLInputElement).value };
-                if (channel) socket?.writeChatMessage(channel?.id, message);
-                (document.querySelector("#message_input") as HTMLInputElement).value = "";
-              }}>Send</button>
-            </div>
-            <div>
-              {chatList.map(chat => (
-                <p>
-                  <b>{chat.username}</b>: <span>{chat.content.text}</span>
-                  <i>{chat.create_time}</i>
-                </p>
-              ))}
+                    <i>{chat.create_time}</i>
+                  </p>
+                ))}
+              </div>
             </div>
           </div>
         ) : (
@@ -114,19 +164,25 @@ export default function App() {
                 if (!session) throw false
                 localStorage.setItem("nkauthtoken", session?.token)
                 localStorage.setItem("nkrefreshtoken", session?.refresh_token)
-                message.success("Đăng nhập thành công")
+
                 window.location.reload();
+                message.success("Đăng nhập thành công")
               } catch (err) {
                 message.error("Lỗi đăng nhập vui lòng kiểm tra lại email và mật khẩu!")
               }
             }} className="loginForm">
+              <div className="titleLogin">
+                <h3>Wellcome</h3>
+              </div>
               <div className="emailInput">
-                Email: <input name="email" type="email" placeholder="Login email" />
+                <span>Email:</span><input name="email" type="email" placeholder="Login email" />
               </div>
               <div className="passwordInput">
-                Password: <input name="password" type="password" placeholder="Login password" />
+                <span>Password:</span>  <input name="password" type="password" placeholder="Login password" />
               </div>
-              <button type="submit">Login</button>
+              <div className="buttonLogin">
+                <button type="submit">Login</button>
+              </div>
             </form>
           </div>
         )}

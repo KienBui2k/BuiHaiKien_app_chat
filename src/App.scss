@@ -1,11 +1,122 @@
-
 .mainLogin {
-    min-height: 1000px;
+    min-height: 900px;
     height: 100%;
     max-width: 100%;
     width: 100%;
-    background-color: red;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-image: url("https://images.pexels.com/photos/956981/milky-way-starry-sky-night-sky-star-956981.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    .loginForm {
+        width: 400px;
+        height: 350px;
+        border-radius: 1px solid black;
+        background-color: rgba(255, 255, 255, 0.5);
+        .titleLogin {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            h3 {
+                font-size: 32px;
+            }
+        }
+        .emailInput {
+            display: flex;
+            width: 90%;
+            height: 28px;
+
+            span {
+                width: 28%;
+                padding-right: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: end;
+                font-size: 20px;
+            }
+            input {
+                width: 70%;
+                border-radius: 4px;
+                padding-left: 12px;
+            }
+        }
+        .passwordInput {
+            margin-top: 28px;
+            display: flex;
+            width: 90%;
+            height: 28px;
+            span {
+                width: 28%;
+                padding-right: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: end;
+                font-size: 20px;
+            }
+            input {
+                width: 70%;
+                border-radius: 4px;
+                padding-left: 12px;
+            }
+        }
+        .buttonLogin {
+            margin-top: 28px;
+            width: 100%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            button {
+                font-size: 20px;
+                border-radius: 4px;
+                border: none;
+                cursor: pointer;
+            }
+        }
+    }
+}
+.mainChat {
+    min-height: 900px;
+    height: 100%;
+    max-width: 100%;
+    width: 100%;
+    display: flex;
+    // justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    .boxchat {
+        max-width: 1440px;
+        width: 100%;
+        height: 100%;
+        .title {
+            height: 40px;
+            margin-top: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            h2 {
+                font-size: 32px;
+            }
+        }
+        .userName {
+            margin-top: 20px;
+            h2 {
+                font-size: 28px;
+            }
+        }
+        .roomneam {
+            margin: 20px 0;
+            h3 {
+                font-size: 22px;
+            }
+        }
+        .inputChat {
+            margin-top: 20px;
+        }
+        .listChat {
+            margin-top: 20px;
+        }
+    }
 }
